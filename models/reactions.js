@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose');
+const calender = require('dayjs/plugin/calendar')
 
 const reactionSchema = new Schema({
     reactionId: {
@@ -16,7 +17,15 @@ const reactionSchema = new Schema({
     },
     createAt: {
         type: Date,
-        default: Date.now(),
-        
+        default: Date.now,
+        get: calender
     }
-})
+},
+{
+    toJSON:{
+        getters:true
+    },
+    id: false
+});
+
+module.exports = reactionSchema
