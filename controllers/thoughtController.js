@@ -39,5 +39,47 @@ module.exports = {
 
     deleteThought(req,res) {
         Thought.findOneAndDelete({_id:req.params.thoughtId})
+        .then((thoughtDB)=> {
+            if(!thoughtDB)
+            return User.findOneAndUpdate(
+                {thought: req.params.thoughtId},
+                {$pull: {thougths: req.params.thoughtId}},
+                {new:true}
+            );
+        })
+        .then((thoughtDB)=>{
+            if(!thoughtDB)  {
+                return res.status(404).json({message:'No thought found'})
+            }
+            res.json({message:'Success!'})
+        })
+       
+    },
+
+    addReaction(req,res) {
+        Thought.findOneAndUpdate(
+            {_id:req.params.thoughtId},
+            {$addToSet: {reactions: req.body}},
+            {runValidators: true, new:true}
+        )
+        .then((thoughtDB)=>{
+            if(!thoughtDB) {
+                return res.status(404).json({message:'No id found'});
+            }
+            res.json(thoughtDB)
+        })
+    },
+
+    removeReaction(req,res) {
+        Thought.findOneAndUpdate(
+            {_id:req.params.thoughtId},
+            {$pull: {reactions: {reactionId: req.params.reactionId}}},
+            {runValidators: true, new:true})
+            .then((thoughtDB)=>{
+                if(!thoughtDB) {
+                    return res.status(404).json({meassage:'No id!'})
+                }
+                res.json(thoughtDB)
+            })
     }
 };
