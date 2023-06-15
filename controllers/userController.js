@@ -51,5 +51,31 @@ module.exports = {
         })
 
         then(()=>res.json({message:'Success!'}))
+    },
+    addFriend(req,res) {
+        User.findOneAndUpdate(
+            {_id:req.params.userId},
+            {$addToSet: {friends: req.body}},
+            {runValidators: true, new:true}
+        )
+        .then((userData)=>{
+            if(!userData) {
+                return res.status(404).json({message:'No id found'});
+            }
+            res.json(userData)
+        })
+    },
+
+    removeFriend(req,res) {
+        User.findOneAndUpdate(
+            {_id:req.params.userId},
+            {$pull: {friends: {friendId: req.params.friendId}}},
+            {runValidators: true, new:true})
+            .then((userData)=>{
+                if(!userData) {
+                    return res.status(404).json({meassage:'No id!'})
+                }
+                res.json(userData)
+            })
     }
 }
