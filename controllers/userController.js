@@ -19,6 +19,7 @@ module.exports = {
             }
             res.json(userData)
         })
+        .catch((err)=> res.status(500).json(err));
     },
 
     createUser(req,res) {
@@ -42,16 +43,16 @@ module.exports = {
     },
 
     deleteUser(req,res) {
-        User.findOneAndRemove({_id: req.params._id})
-        .then((userData)=>{
-            if(!userData){
-                return res.status(404).json({message:'No user find with id.'})
-            }
-            return Thought.deleteMany({_id:{$in: userData.thoughts}})
-        })
-
-        then(()=>res.json({message:'Success!'}))
+        User.findOneAndRemove({_id: req.params.userId})
+        .then((userData) =>
+        !userData
+          ? res.status(404).json({ message: 'No user with that ID' })
+          : Thought.deleteMany({ _id: { $in: userdata.thoughts } })
+      )
+      .then(() => res.json({ message: 'User and associated thoughts deleted!' }))
+      .catch((err) => res.status(500).json(err));
     },
+
     addFriend(req,res) {
         User.findOneAndUpdate(
             {_id:req.params.userId},
@@ -64,6 +65,7 @@ module.exports = {
             }
             res.json(userData)
         })
+        .catch((err)=> res.status(500).json(err));
     },
 
     removeFriend(req,res) {

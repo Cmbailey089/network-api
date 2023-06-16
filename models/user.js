@@ -12,7 +12,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       unique: true,
-      match: [/^[a-zA-Z0-9.!#$%&*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,'Invalid email']
+      match: [/^[a-zA-Z0-9]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,'Invalid email']
     },
     thoughts:[{
         type: Schema.Types.ObjectId,
@@ -31,7 +31,7 @@ const userSchema = new Schema(
   }
 );
 
-userSchema.virtuals('friendcount').get(function(){
+userSchema.virtual('friendcount').get(function(){
     return this.friends.length;
 })
 const User = model('User', userSchema);

@@ -3,14 +3,15 @@ const { Thought,User } = require('../models');
 module.exports = {
     getThoughts(req,res) {
         Thought.find()
-        .then((thoughtDB) => res.json(thoughtDB))
+        .sort({ createdAt: -1 })
+        .then((thoughtData) => {res.json(thoughtData)})
         .catch((err)=> res.status(500).json(err));
     },
     oneThought(req,res) {
         Thought.findOne({_id: req.params.thoughtId})
         .then((thoughtData) => {
             if(!thoughtData) {
-                return res.staus(404).json({message:'Can not find though.'});
+                return res.staus(404).json({message:'Can not find thought.'});
             }
             res.json(thoughtData)
             .catch((err)=> 

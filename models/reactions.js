@@ -1,4 +1,4 @@
-const { Schema, model } = require('mongoose');
+const { Schema, Types } = require('mongoose');
 const calender = require('dayjs/plugin/calendar')
 
 const reactionSchema = new Schema({
