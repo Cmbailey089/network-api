@@ -10,7 +10,7 @@ const thoughtSchema = new Schema(
             min_length:1,
             max_length: 128
         },
-        createAt: {
+        createdAt: {
             type: Date,
             default: Date.now(),
             get: calender
