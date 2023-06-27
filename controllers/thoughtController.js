@@ -7,6 +7,7 @@ module.exports = {
         .then((thoughtData) => {res.json(thoughtData)})
         .catch((err)=> res.status(500).json(err));
     },
+
     oneThought(req,res) {
         Thought.findOne({_id: req.params.thoughtId})
         .then((thoughtData) => {
@@ -14,9 +15,9 @@ module.exports = {
                 return res.staus(404).json({message:'Can not find thought.'});
             }
             res.json(thoughtData)
-            .catch((err)=> 
-            res.status(500).json(err))
+            
         })
+            .catch((err)=> res.status(500).json(err))
     },
 
     createThought(req,res) {
@@ -72,18 +73,20 @@ module.exports = {
 
     addReaction(req,res) {
         Thought.findOneAndUpdate(
-            {_id:req.params.thoughtId},
-            {$addToSet: { reactions: req.body }},
-            {runValidators: true, new:true}
+            { _id:req.params.thoughtId },
+            { $addToSet: { reactions: req.body }},
+            { runValidators: true, new:true }
         )
-        .then((thoughtData)=> 
-        !thoughtData
-        ? res
-            .status(404)
-            .json({ message: 'No student found with that ID :(' })
-        : res.json(thoughtData)
-    )
-    .catch((err) => res.status(500).json(err));
+        .then((thoughtData)=> {
+            if (!thoughtData) {
+                return res.status(404).json({ message:'No thought found with that id!'});
+            }
+            res.json(thoughtData)
+        })
+        .catch((err)=> {
+            console.log(err);
+            res.status(500).json(err)
+        })
     },
 
     removeReaction(req,res) {
@@ -93,7 +96,7 @@ module.exports = {
             {runValidators: true, new:true})
             .then((thoughtData)=>{
                 if(!thoughtData) {
-                    return res.status(404).json({meassage:'No id!'})
+                    return res.status(404).json({meassage:'No id found!'})
                 }
                 res.json(thoughtData)
             })
