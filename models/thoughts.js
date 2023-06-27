@@ -1,6 +1,5 @@
 const { Schema, model } = require ('mongoose');
 const reactionSchema = require('./reactions');
-const calender = require('dayjs/plugin/calendar')
 
 const thoughtSchema = new Schema(
     {
@@ -13,7 +12,7 @@ const thoughtSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now(),
-            get: calender
+           
         },
         username:{
             type: String,

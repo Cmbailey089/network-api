@@ -73,15 +73,17 @@ module.exports = {
     addReaction(req,res) {
         Thought.findOneAndUpdate(
             {_id:req.params.thoughtId},
-            {$addToSet: {reactions: req.body}},
+            {$addToSet: { reactions: req.body }},
             {runValidators: true, new:true}
         )
-        .then((thoughtData)=>{
-            if(!thoughtData) {
-                return res.status(404).json({message:'No id found'});
-            }
-            res.json(thoughtData)
-        })
+        .then((thoughtData)=> 
+        !thoughtData
+        ? res
+            .status(404)
+            .json({ message: 'No student found with that ID :(' })
+        : res.json(thoughtData)
+    )
+    .catch((err) => res.status(500).json(err));
     },
 
     removeReaction(req,res) {
@@ -95,5 +97,6 @@ module.exports = {
                 }
                 res.json(thoughtData)
             })
+            .catch((err)=> res.status(500).json(err));
     }
 };
